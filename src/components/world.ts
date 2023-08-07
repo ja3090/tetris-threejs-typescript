@@ -11,7 +11,6 @@ export default class World {
   public scene;
   public renderer;
   public activePiece;
-  public boardMap;
   public grid;
 
   constructor() {
@@ -24,24 +23,33 @@ export default class World {
     this.scene = new Scene().scene;
     this.renderer = new Renderer().renderer;
     this.activePiece = new ActivePiece();
-    this.boardMap = new Board().board;
+    new Board();
     this.grid = new Grid().grid;
     this.resize();
-    this.activePiece.set = new ZBlock().block;
-    this.scene.add(this.camera, this.grid, this.activePiece.get);
+    this.rotateActivePiece();
+    this.activePiece.set = new ZBlock();
+    this.activePiece.get.block.children.forEach((child) =>
+      console.log(child.coords)
+    );
 
-    console.log(this.activePiece.get.children);
+    this.scene.add(this.camera, this.grid, this.activePiece.get.block);
   }
 
   public animate() {
     this.renderer.render(this.scene, this.camera);
   }
 
-  public resize() {
+  private resize() {
     window.addEventListener("resize", () => {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+
+  private rotateActivePiece() {
+    window.addEventListener("keydown", (e) => {
+      if (e.key === " ") this.activePiece.rotatePiece(true, true);
     });
   }
 }
