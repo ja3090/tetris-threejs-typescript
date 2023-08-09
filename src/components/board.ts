@@ -5,8 +5,12 @@ type BoardMap = {
 
 export default class Board {
   public static boardMap: BoardMap;
-  public static boardHeight = 20;
-  public static boardWidth = 10;
+  public static readonly boardHeight = 20;
+  public static readonly boardWidth = 10;
+  public static readonly lowerX = -(this.boardWidth / 2) + 1;
+  public static readonly lowerY = -(this.boardHeight / 2);
+  public static readonly higherX = this.lowerX * -1 + 2;
+  public static readonly higherY = this.lowerY * -1;
 
   constructor() {
     Board.boardMap = Board.createBoard();
@@ -21,19 +25,12 @@ export default class Board {
       [k: BoardKey]: boolean;
     } = {};
 
-    const lowerX = -(this.boardWidth / 2);
-    const lowerY = -(this.boardHeight / 2);
-    const higherX = lowerX * -1;
-    const higherY = lowerY * -1;
-
-    for (let x = lowerX; x < higherX; x++) {
-      for (let y = lowerY; y < higherY; y++) {
+    for (let x = this.lowerX; x < this.higherX; x++) {
+      for (let y = this.lowerY; y < this.higherY; y++) {
         const key = Board.keyGen(x, y);
         board[key] = false;
       }
     }
-
-    console.log(Object.keys(board).length);
 
     return board;
   }

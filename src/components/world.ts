@@ -1,8 +1,9 @@
 import { Grid } from "./Grid";
-import ActivePiece from "./activePiece";
-import { ZBlock } from "./blocks";
+import ActivePiece from "./blocks/activePiece";
+import { OBlock, ZBlock } from "./blocks";
 import Board from "./board";
 import { Camera } from "./camera";
+import Listeners from "./listeners";
 import { Renderer } from "./renderer";
 import { Scene } from "./scene";
 
@@ -22,34 +23,16 @@ export default class World {
     ).camera;
     this.scene = new Scene().scene;
     this.renderer = new Renderer().renderer;
-    this.activePiece = new ActivePiece();
+    this.activePiece = new ActivePiece(new ZBlock());
     new Board();
     this.grid = new Grid().grid;
-    this.resize();
-    this.rotateActivePiece();
-    this.activePiece.set = new ZBlock();
-    this.activePiece.get.block.children.forEach((child) =>
-      console.log(child.coords)
-    );
+    new Listeners(this.camera, this.renderer, this.activePiece);
+    // this.activePiece.set = new OBlock();
 
     this.scene.add(this.camera, this.grid, this.activePiece.get.block);
   }
 
   public animate() {
     this.renderer.render(this.scene, this.camera);
-  }
-
-  private resize() {
-    window.addEventListener("resize", () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  }
-
-  private rotateActivePiece() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key === " ") this.activePiece.rotatePiece(true, true);
-    });
   }
 }

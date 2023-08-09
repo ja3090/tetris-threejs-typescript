@@ -10,3 +10,14 @@ export class ZBlock extends Block {
     ]);
   }
 }
+
+export class OBlock extends Block {
+  constructor() {
+    super("o", [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ]);
+  }
+}

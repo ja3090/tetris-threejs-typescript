@@ -1,5 +1,4 @@
 import { CustomThreeGroup } from "../../types/blockTypes";
-import { objEntries } from "../../utils/objToArr";
 import THREE from "../../utils/three";
 import Square from "../square";
 import OffsetData from "./offsetData";
@@ -24,11 +23,6 @@ export default class Block {
   private static groups: {
     [k: string]: Block;
   } = {};
-  // private moves = {
-  //   left: [-1, 0],
-  //   down: [0, -1],
-  //   right: [1, 0],
-  // };
 
   constructor(blockName: BlockNames, positions: number[][]) {
     this.blockName = blockName;
@@ -40,8 +34,6 @@ export default class Block {
       this.block = this.generateBlock(positions);
       this.offsetData = OffsetData.attachOffsetData(blockName);
     }
-
-    // this.setOuterMostBlocks(block);
   }
 
   private generateBlock(positions: number[][]) {
@@ -59,29 +51,4 @@ export default class Block {
 
     return block;
   }
-
-  // private setOuterMostBlocks(block: CustomThreeGroup) {
-  //   const mapBlock: MapBlock = {};
-
-  //   block.children.forEach((child) => {
-  //     const key = this.keyGen(child.position.x, child.position.y);
-  //     mapBlock[key] = child;
-  //   });
-
-  //   block.children.forEach((child) => {
-  //     const { x, y } = child.position;
-
-  //     for (const [dir, [moveX, moveY]] of objEntries(this.moves)) {
-  //       const key = this.keyGen(x - moveX, y - moveY);
-  //       const blockKey = `${dir}Most` as const;
-  //       block[blockKey] = [];
-
-  //       if (!mapBlock[key]) block[blockKey]!.push(child);
-  //     }
-  //   });
-  // }
-
-  // private keyGen(x: number, y: number) {
-  //   return `${x}${y}`;
-  // }
 }
