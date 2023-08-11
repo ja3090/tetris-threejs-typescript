@@ -13,7 +13,7 @@ export default abstract class Block {
   public block: CustomThreeGroup;
   public rotationIndex = 0;
   public rotationStates: number[][][];
-  public static readonly rotationIndexes = 4;
+  public rotationIndexes: number;
   public rotator: Rotator;
   public mover: Mover;
   public abstract offsetData: OffsetDataReturnType;
@@ -24,6 +24,7 @@ export default abstract class Block {
     this.block = this.createBlock(this.rotationIndex);
     this.rotator = new Rotator(this);
     this.mover = new Mover(this);
+    this.rotationIndexes = rotationStates.length;
   }
 
   public createBlock(rotIndex: number) {

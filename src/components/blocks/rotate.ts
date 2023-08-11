@@ -15,7 +15,7 @@ export default class Rotator {
     const groupPosY = block.block.position.y;
     const newRotIndex = this.mod(
       this.block.rotationIndex + (clockwise ? 1 : -1),
-      Block.rotationIndexes
+      this.block.rotationIndexes
     );
     const newBlock = this.block.createBlock(newRotIndex);
     newBlock.position.set(groupPosX, groupPosY, 0);
@@ -43,6 +43,7 @@ export default class Rotator {
     );
 
     if (!valid && !offsetOk) {
+      newBlock.removeFromParent();
       return this.block.get;
     }
 
@@ -88,6 +89,10 @@ export default class Rotator {
         const potY = position.y + endOffset.y + newBlock.position.y;
 
         const key = Board.keyGen(potX, potY);
+
+        if (this.block.tileHasJustStarted(potX, potY)) {
+          return true;
+        }
 
         return Board.boardMap[key] === false;
       });

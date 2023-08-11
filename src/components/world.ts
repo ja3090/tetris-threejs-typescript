@@ -1,11 +1,12 @@
 import { Grid } from "./Grid";
-import { ZBlock } from "./blocks/index/zBlock";
 import Block from "./blocks/block";
 import Board from "./board";
 import { Camera } from "./camera";
 import Listeners from "./listeners";
 import { Renderer } from "./renderer";
 import { Scene } from "./scene";
+import { RandomBlock } from "./blocks/randomBlock";
+import { Interval } from "./interval";
 
 export default class World {
   public camera;
@@ -13,6 +14,8 @@ export default class World {
   public renderer;
   public activePiece;
   public grid;
+  public interval;
+  public randomBlockPicker;
 
   constructor() {
     this.camera = new Camera(
@@ -25,8 +28,11 @@ export default class World {
     this.renderer = new Renderer().renderer;
     new Board();
     this.grid = new Grid().grid;
-    this.activePiece = new ZBlock();
+    this.randomBlockPicker = new RandomBlock();
+    this.activePiece = this.randomBlockPicker.pickRandomBlock();
+    this.activePiece.block.position.set(0, 10, 0);
     new Listeners(this);
+    this.interval = new Interval(this.movePieceDown.bind(this), 200);
 
     this.scene.add(this.camera, this.grid, this.activePiece.block);
   }
@@ -37,5 +43,15 @@ export default class World {
 
   set activePieceSet(block: Block) {
     this.activePiece = block;
+  }
+
+  public movePieceDown() {
+    this.activePiece.block.position.y -= 1;
+    if (this.activePiece.block.position.y === -10) {
+      this.scene.remove(this.activePiece.block);
+      const newBlock = this.randomBlockPicker.pickRandomBlock();
+      this.scene.add(newBlock.block);
+      this.activePieceSet = newBlock;
+    }
   }
 }
