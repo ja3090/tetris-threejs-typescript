@@ -1,43 +1,33 @@
 import { CustomThreeGroup } from "../../types/blockTypes";
 import THREE from "../../utils/three";
+import Board from "../board";
 import Square from "../square";
-import OffsetData from "./offsetData";
-
-// type MapBlock = {
-//   [k: string]: CustomThreeGroup["children"][number];
-// };
+import Mover from "./move";
+import { OffsetDataReturnType } from "./offsetData";
+import Rotator from "./rotate";
 
 export type BlockNames = "z" | "j" | "l" | "s" | "t" | "i" | "o";
 
-/**
- * @param positions first element of the array will be the vectors of the centre of the block, at which the
- * rotations will move around from
- */
-
-export default class Block {
+export default abstract class Block {
   public blockName: BlockNames;
   public block: CustomThreeGroup;
   public rotationIndex = 0;
-  public offsetData: number[][][];
-  static readonly rotationIndexes = 4;
-  private static groups: {
-    [k: string]: Block;
-  } = {};
+  public rotationStates: number[][][];
+  public static readonly rotationIndexes = 4;
+  public rotator: Rotator;
+  public mover: Mover;
+  public abstract offsetData: OffsetDataReturnType;
 
-  constructor(blockName: BlockNames, positions: number[][]) {
+  constructor(blockName: BlockNames, rotationStates: number[][][]) {
     this.blockName = blockName;
-
-    if (Block.groups[blockName]) {
-      this.block = Block.groups[blockName].block;
-      this.offsetData = Block.groups[blockName].offsetData;
-    } else {
-      this.block = this.generateBlock(positions);
-      this.offsetData = OffsetData.attachOffsetData(blockName);
-    }
+    this.rotationStates = rotationStates;
+    this.block = this.createBlock(this.rotationIndex);
+    this.rotator = new Rotator(this);
+    this.mover = new Mover(this);
   }
 
-  private generateBlock(positions: number[][]) {
-    const squares = positions.map(([x, y]) => {
+  public createBlock(rotIndex: number) {
+    const squares = this.rotationStates[rotIndex].map(([x, y]) => {
       const { square } = new Square();
 
       square.rotateY(-Math.PI / 2);
@@ -50,5 +40,28 @@ export default class Block {
     const block = new THREE.Group().add(...squares) as CustomThreeGroup;
 
     return block;
+  }
+
+  get get() {
+    return this;
+  }
+
+  set setter({
+    block,
+    newRotIndex,
+  }: {
+    block: CustomThreeGroup;
+    newRotIndex: number;
+  }) {
+    this.block = block;
+    this.rotationIndex = newRotIndex;
+  }
+
+  public tileHasJustStarted(potentialX: number, potentialY: number) {
+    return (
+      potentialY >= 10 &&
+      potentialX >= Board.lowerX &&
+      potentialX < Board.higherX
+    );
   }
 }

@@ -1,7 +1,9 @@
 import { BlockNames } from "./block";
 
+export type OffsetDataReturnType = ReturnType<typeof OffsetData.offsetDataGen>;
+
 export default class OffsetData {
-  public static attachOffsetData(blockName: BlockNames) {
+  public static offsetDataGen(blockName: BlockNames) {
     switch (blockName) {
       case "j":
       case "l":

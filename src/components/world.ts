@@ -1,6 +1,6 @@
 import { Grid } from "./Grid";
-import ActivePiece from "./blocks/activePiece";
-import { OBlock, ZBlock } from "./blocks";
+import { ZBlock } from "./blocks/index/zBlock";
+import Block from "./blocks/block";
 import Board from "./board";
 import { Camera } from "./camera";
 import Listeners from "./listeners";
@@ -23,16 +23,19 @@ export default class World {
     ).camera;
     this.scene = new Scene().scene;
     this.renderer = new Renderer().renderer;
-    this.activePiece = new ActivePiece(new ZBlock());
     new Board();
     this.grid = new Grid().grid;
-    new Listeners(this.camera, this.renderer, this.activePiece);
-    // this.activePiece.set = new OBlock();
+    this.activePiece = new ZBlock();
+    new Listeners(this);
 
-    this.scene.add(this.camera, this.grid, this.activePiece.get.block);
+    this.scene.add(this.camera, this.grid, this.activePiece.block);
   }
 
   public animate() {
     this.renderer.render(this.scene, this.camera);
+  }
+
+  set activePieceSet(block: Block) {
+    this.activePiece = block;
   }
 }

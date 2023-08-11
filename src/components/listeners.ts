@@ -1,43 +1,47 @@
-import ActivePiece from "./blocks/activePiece";
-import { Camera } from "./camera";
-import { Renderer } from "./renderer";
+import World from "./world";
 
 export default class Listeners {
-  private camera: Camera["camera"];
-  private renderer: Renderer["renderer"];
-  private activePiece: ActivePiece;
+  private world: World;
 
-  constructor(
-    camera: Camera["camera"],
-    renderer: Renderer["renderer"],
-    activePiece: ActivePiece
-  ) {
-    this.camera = camera;
-    this.renderer = renderer;
-    this.activePiece = activePiece;
-    this.registerListeners(this.initRotateCtrls, this.resize);
+  constructor(world: World) {
+    this.world = world;
+    this.resize();
+    this.initRotateCtrls();
   }
 
-  private registerListeners(...listeners: (() => void)[]) {
-    listeners.forEach((listener) => {
-      listener.bind(this).call(listener);
-    });
-  }
-
-  private resize() {
+  public resize() {
     window.addEventListener("resize", () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.world.camera.aspect = window.innerWidth / window.innerHeight;
+      this.world.camera.updateProjectionMatrix();
+      this.world.renderer.setSize(window.innerWidth, window.innerHeight);
     });
   }
 
   private initRotateCtrls() {
     window.addEventListener("keydown", (e) => {
-      if (e.key === " ") this.activePiece.rotator.rotatePiece(true, true);
-      if (e.key === "ArrowLeft") this.activePiece.mover.move("left");
-      if (e.key === "ArrowRight") this.activePiece.mover.move("right");
-      if (e.key === "ArrowDown") this.activePiece.mover.move("down");
+      if (e.key === " ") {
+        this.world.scene.remove(this.world.activePiece.block);
+        const block = this.world.activePiece.rotator.rotatePiece(true);
+        this.world.scene.add(block.block);
+
+        this.world.activePieceSet = block;
+      }
+      if (e.key === "z") {
+        this.world.scene.remove(this.world.activePiece.block);
+        const block = this.world.activePiece.rotator.rotatePiece(false);
+        this.world.scene.add(block.block);
+
+        this.world.activePieceSet = block;
+      }
+      if (e.key === "ArrowRight") {
+        this.world.activePiece.mover.move("right");
+      }
+      if (e.key === "ArrowLeft") {
+        this.world.activePiece.mover.move("left");
+      }
+      if (e.key === "ArrowDown") {
+        this.world.activePiece.mover.move("down");
+      }
     });
   }
 }
