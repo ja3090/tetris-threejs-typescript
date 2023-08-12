@@ -87,3 +87,143 @@ export class ZBlock extends Block {
     this.offsetData = OffsetData.offsetDataGen("z");
   }
 }
+
+export class JBlock extends Block {
+  public offsetData: OffsetDataReturnType;
+
+  constructor() {
+    super("z", [
+      [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [-1, 1],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [0, 1],
+        [1, 1],
+      ],
+      [
+        [0, 0],
+        [-1, 0],
+        [1, 0],
+        [1, -1],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [-1, -1],
+        [0, 1],
+      ],
+    ]);
+
+    this.offsetData = OffsetData.offsetDataGen("z");
+  }
+}
+
+export class LBlock extends Block {
+  public offsetData: OffsetDataReturnType;
+
+  constructor() {
+    super("z", [
+      [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [1, 1],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [0, 1],
+        [1, -1],
+      ],
+      [
+        [0, 0],
+        [-1, 0],
+        [1, 0],
+        [-1, -1],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [-1, 1],
+        [0, 1],
+      ],
+    ]);
+
+    this.offsetData = OffsetData.offsetDataGen("z");
+  }
+}
+
+export class TBlock extends Block {
+  public offsetData: OffsetDataReturnType;
+
+  constructor() {
+    super("z", [
+      [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [0, 1],
+        [1, 0],
+      ],
+      [
+        [0, 0],
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+      ],
+      [
+        [0, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ],
+    ]);
+
+    this.offsetData = OffsetData.offsetDataGen("z");
+  }
+}
+
+export class IBlock extends Block {
+  public offsetData: OffsetDataReturnType;
+
+  constructor() {
+    super("z", [
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [-1, 0],
+      ],
+      [
+        [0, 0],
+        [0, 1],
+        [0, -1],
+        [0, -2],
+      ],
+      [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [-2, 0],
+      ],
+      [
+        [0, 0],
+        [0, -1],
+        [0, 1],
+        [0, 2],
+      ],
+    ]);
+
+    this.offsetData = OffsetData.offsetDataGen("z");
+  }
+}

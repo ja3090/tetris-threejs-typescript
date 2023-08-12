@@ -20,6 +20,7 @@ export default class Mover {
     const [moveX, moveY] = this.moves[dir];
 
     let moveOk = true;
+    let blockFinished = false;
 
     for (let index = 0; index < length; index++) {
       const { x, y } = this.block.block.children[index].position;
@@ -43,7 +44,24 @@ export default class Mover {
       this.block.block.position.set(groupX + moveX, groupY + moveY, 0);
     }
 
-    return this.block.get;
+    if (!moveOk && dir === "down") {
+      this.updateBoard(groupX, groupY);
+      blockFinished = true;
+    }
+
+    return { block: this.block.get, blockFinished };
+  }
+
+  private updateBoard(groupX: number, groupY: number) {
+    for (const { position } of this.block.block.children) {
+      const { x, y } = {
+        x: position.x + groupX,
+        y: position.y + groupY,
+      };
+      const key = Board.keyGen(x, y);
+
+      Board.set = { key, status: true };
+    }
   }
 
   public tileHasJustStarted(currY: number, potentialX: number) {

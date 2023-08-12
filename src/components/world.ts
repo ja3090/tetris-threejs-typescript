@@ -29,10 +29,10 @@ export default class World {
     new Board();
     this.grid = new Grid().grid;
     this.randomBlockPicker = new RandomBlock();
-    this.activePiece = this.randomBlockPicker.pickRandomBlock();
+    this.activePiece = this.randomBlockPicker.randomBlock();
     this.activePiece.block.position.set(0, 10, 0);
     new Listeners(this);
-    this.interval = new Interval(this.movePieceDown.bind(this), 200);
+    this.interval = new Interval(this.movePieceDown.bind(this), 500);
 
     this.scene.add(this.camera, this.grid, this.activePiece.block);
   }
@@ -46,10 +46,10 @@ export default class World {
   }
 
   public movePieceDown() {
-    this.activePiece.block.position.y -= 1;
-    if (this.activePiece.block.position.y === -10) {
-      this.scene.remove(this.activePiece.block);
-      const newBlock = this.randomBlockPicker.pickRandomBlock();
+    const { blockFinished } = this.activePiece.mover.move("down");
+    if (blockFinished) {
+      const newBlock = this.randomBlockPicker.randomBlock();
+      newBlock.block.position.set(0, 10, 0);
       this.scene.add(newBlock.block);
       this.activePieceSet = newBlock;
     }

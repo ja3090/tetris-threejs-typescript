@@ -1,38 +1,56 @@
 import * as allBlocks from ".";
 import { ObjectHelpers } from "../../utils/objToArr";
-import Block from "./block";
 
 export class RandomBlock {
+  private static instance: RandomBlock;
   public static allBlocks: typeof allBlocks;
+  public static shuffledBlocks: (typeof allBlocks)[keyof typeof allBlocks][] =
+    [];
+  public static index = 0;
 
   constructor() {
+    if (RandomBlock.instance) {
+      throw new Error("Only one instance of RandomBlock allowed.");
+    }
+
+    RandomBlock.instance = this;
     RandomBlock.allBlocks = allBlocks;
+    this.shuffle();
   }
 
   private randomNumber(max: number, min = 0) {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  public pickRandomBlock(): Block {
+  private shuffle() {
     let keys = ObjectHelpers.objKeys(RandomBlock.allBlocks);
 
     if (!keys.length) {
       RandomBlock.allBlocks = allBlocks;
-      keys = ObjectHelpers.objKeys(RandomBlock.allBlocks);
+      return;
     }
 
     const randomNum = this.randomNumber(keys.length);
     const randomKey = keys[randomNum];
 
-    const newAllBlocks = {} as typeof allBlocks;
+    RandomBlock.shuffledBlocks.push(allBlocks[randomKey]);
 
-    for (const key of keys) {
-      if (key === randomKey) continue;
-      newAllBlocks[key] = allBlocks[key];
+    const { [randomKey]: _, ...rest } = RandomBlock.allBlocks;
+
+    RandomBlock.allBlocks = rest as typeof allBlocks;
+
+    this.shuffle();
+  }
+
+  public randomBlock() {
+    const blockIndex = RandomBlock.index % RandomBlock.shuffledBlocks.length;
+
+    RandomBlock.index += 1;
+
+    if (blockIndex === 0 && RandomBlock.index !== 0) {
+      this.shuffle();
     }
 
-    RandomBlock.allBlocks = newAllBlocks;
-
-    return new allBlocks[randomKey]();
+    return new RandomBlock.shuffledBlocks[blockIndex]();
   }
 }
