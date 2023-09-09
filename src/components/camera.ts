@@ -6,6 +6,6 @@ export class Camera {
   constructor(fov = 50, aspect = 1, near = 0.1, far = 2000) {
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    this.camera.position.set(0, 0, 50);
+    this.camera.position.set(4, 10, 50);
   }
 }

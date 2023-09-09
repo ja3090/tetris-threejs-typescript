@@ -1,9 +1,6 @@
 import Block from "./block";
-import OffsetData, { OffsetDataReturnType } from "./offsetData";
 
 export class OBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
     super("o", [
       [
@@ -13,14 +10,10 @@ export class OBlock extends Block {
         [0, 1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("o");
   }
 }
 
 export class SBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
     super("s", [
       [
@@ -48,14 +41,10 @@ export class SBlock extends Block {
         [0, -1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("s");
   }
 }
 
 export class ZBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
     super("z", [
       [
@@ -83,16 +72,12 @@ export class ZBlock extends Block {
         [0, 1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("z");
   }
 }
 
 export class JBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
-    super("z", [
+    super("j", [
       [
         [0, 0],
         [1, 0],
@@ -118,16 +103,12 @@ export class JBlock extends Block {
         [0, 1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("z");
   }
 }
 
 export class LBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
-    super("z", [
+    super("l", [
       [
         [0, 0],
         [1, 0],
@@ -153,16 +134,12 @@ export class LBlock extends Block {
         [0, 1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("z");
   }
 }
 
 export class TBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
-    super("z", [
+    super("t", [
       [
         [0, 0],
         [1, 0],
@@ -188,16 +165,12 @@ export class TBlock extends Block {
         [0, -1],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("z");
   }
 }
 
 export class IBlock extends Block {
-  public offsetData: OffsetDataReturnType;
-
   constructor() {
-    super("z", [
+    super("i", [
       [
         [0, 0],
         [1, 0],
@@ -223,7 +196,5 @@ export class IBlock extends Block {
         [0, 2],
       ],
     ]);
-
-    this.offsetData = OffsetData.offsetDataGen("z");
   }
 }

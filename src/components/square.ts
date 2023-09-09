@@ -9,44 +9,37 @@ export default class Square {
   }
 
   private createSquare() {
-    let allBlocks = [];
-
-    let vertices1 = [];
-
-    vertices1.push(0, 0, 0);
-    vertices1.push(0, 1, 0);
-    vertices1.push(0, 0, 1);
-
-    allBlocks.push(this.createBlock(vertices1));
-
-    let vertices2 = [];
-
-    vertices2.push(0, 1, 0);
-    vertices2.push(0, 1, 1);
-    vertices2.push(0, 0, 1);
-
-    allBlocks.push(this.createBlock(vertices2));
+    const block = this.createBlock();
 
     const square = new THREE.Group();
-    square.add(...allBlocks);
+
+    square.add(block);
+
+    square.position.y += 0.2;
 
     return square;
   }
 
-  private createBlock(vertices: number[]) {
-    const geometry = new THREE.BufferGeometry();
+  private createBlock() {
+    const shape = new THREE.Shape();
 
-    geometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(vertices, 3)
-    );
+    shape.lineTo(0, 0.6);
+    shape.quadraticCurveTo(0, 0.8, 0.2, 0.8);
+    // shape.lineTo(0.8, 0.8);
+    shape.quadraticCurveTo(1, 0.8, 1, 0.6);
+    // shape.lineTo(1, 0);
+    shape.quadraticCurveTo(1, -0.2, 0.8, -0.2);
+    // shape.lineTo(0.2, -0.2);
+    // shape.quadraticCurveTo(0, -0.2, 0, 0);
 
+    const geometry = new THREE.ShapeGeometry(shape);
     const material = new THREE.MeshBasicMaterial({
-      color: 0xff0000,
-      side: THREE.DoubleSide,
+      color: "white",
     });
 
     const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.y += 0.2;
 
     return mesh;
   }

@@ -4,18 +4,22 @@ export class Grid {
   public grid;
 
   constructor() {
-    const gridHelper = () => new THREE.GridHelper(10, 10);
+    const path = new THREE.Path();
 
-    const grid1 = gridHelper();
-    const grid2 = gridHelper();
+    path.lineTo(0, 20);
+    path.lineTo(0, 0);
+    path.lineTo(10, 0);
+    path.lineTo(10, 20);
 
-    grid1.position.z = -5;
-    grid2.position.z = 5;
+    const points = path.getPoints();
 
-    const grid = new THREE.Group().add(grid1, grid2);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+    });
 
-    grid.rotation.set(Math.PI / 2, Math.PI, 0);
+    const mesh = new THREE.Line(geometry, material);
 
-    this.grid = grid;
+    this.grid = mesh;
   }
 }

@@ -2,35 +2,34 @@ import Board from "../board";
 import Block from "./block";
 
 export default class Mover {
-  private block: Block;
-  private readonly moves = {
+  public static readonly moves = {
     left: [-1, 0],
     down: [0, -1],
     right: [1, 0],
   };
+  public block: Block;
 
   constructor(block: Block) {
     this.block = block;
   }
 
-  public move(dir: keyof typeof this.moves) {
-    const { length } = this.block.block.children;
-    const { x: groupX, y: groupY } = this.block.block.position;
+  public move(dir: keyof typeof Mover.moves) {
+    const { length } = this.block.block;
 
-    const [moveX, moveY] = this.moves[dir];
+    const [moveX, moveY] = Mover.moves[dir];
 
     let moveOk = true;
     let blockFinished = false;
 
     for (let index = 0; index < length; index++) {
-      const { x, y } = this.block.block.children[index].position;
+      const { x, y } = this.block.get.block[index].position;
 
-      const potX = x + this.block.block.position.x + moveX;
-      const potY = y + this.block.block.position.y + moveY;
+      const potX = x + moveX;
+      const potY = y + moveY;
 
       const key = Board.keyGen(potX, potY);
 
-      if (this.tileHasJustStarted(y + this.block.block.position.y, potX)) {
+      if (this.block.tileHasJustStarted(potX, potY)) {
         continue;
       }
 
@@ -41,32 +40,24 @@ export default class Mover {
     }
 
     if (moveOk) {
-      this.block.block.position.set(groupX + moveX, groupY + moveY, 0);
+      this.block.setPos(moveX, moveY);
     }
 
     if (!moveOk && dir === "down") {
-      this.updateBoard(groupX, groupY);
+      this.updateBoard();
       blockFinished = true;
     }
 
     return { block: this.block.get, blockFinished };
   }
 
-  private updateBoard(groupX: number, groupY: number) {
-    for (const { position } of this.block.block.children) {
-      const { x, y } = {
-        x: position.x + groupX,
-        y: position.y + groupY,
-      };
+  private updateBoard() {
+    for (const tile of this.block.block) {
+      const { x, y } = tile.position;
+
       const key = Board.keyGen(x, y);
 
-      Board.set = { key, status: true };
+      Board.set = { key, tile };
     }
-  }
-
-  public tileHasJustStarted(currY: number, potentialX: number) {
-    return (
-      currY >= 10 && potentialX >= Board.lowerX && potentialX < Board.higherX
-    );
   }
 }

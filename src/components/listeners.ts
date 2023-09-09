@@ -2,6 +2,7 @@ import World from "./world";
 
 export default class Listeners {
   private world: World;
+  private operating = false;
 
   constructor(world: World) {
     this.world = world;
@@ -17,21 +18,22 @@ export default class Listeners {
     });
   }
 
+  set setIsOperating(isOperating: boolean) {
+    this.operating = isOperating;
+  }
+
   private initRotateCtrls() {
     window.addEventListener("keydown", (e) => {
+      if (this.operating) return;
+      this.setIsOperating = true;
       if (e.key === " ") {
-        this.world.scene.remove(this.world.activePiece.block);
-        const block = this.world.activePiece.rotator.rotatePiece(true);
-        this.world.scene.add(block.block);
+        console.log(this.world.audio.analyser);
 
-        this.world.activePieceSet = block;
+        if (!this.world.audio.analyser) this.world.audio.createAudioContext();
+        this.world.activePiece.rotator.rotatePiece(true);
       }
       if (e.key === "z") {
-        this.world.scene.remove(this.world.activePiece.block);
-        const block = this.world.activePiece.rotator.rotatePiece(false);
-        this.world.scene.add(block.block);
-
-        this.world.activePieceSet = block;
+        this.world.activePiece.rotator.rotatePiece(false);
       }
       if (e.key === "ArrowRight") {
         this.world.activePiece.mover.move("right");
@@ -40,8 +42,9 @@ export default class Listeners {
         this.world.activePiece.mover.move("left");
       }
       if (e.key === "ArrowDown") {
-        this.world.activePiece.mover.move("down");
+        this.world.interval.changeTime(0);
       }
+      this.setIsOperating = false;
     });
   }
 }

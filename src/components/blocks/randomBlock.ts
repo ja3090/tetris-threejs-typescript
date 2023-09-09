@@ -23,7 +23,7 @@ export class RandomBlock {
   }
 
   private shuffle() {
-    let keys = ObjectHelpers.objKeys(RandomBlock.allBlocks);
+    const keys = ObjectHelpers.objKeys(RandomBlock.allBlocks);
 
     if (!keys.length) {
       RandomBlock.allBlocks = allBlocks;
@@ -44,13 +44,19 @@ export class RandomBlock {
 
   public randomBlock() {
     const blockIndex = RandomBlock.index % RandomBlock.shuffledBlocks.length;
+    const nextIndex = (blockIndex + 1) % RandomBlock.shuffledBlocks.length;
+
+    const current = new RandomBlock.shuffledBlocks[blockIndex]();
 
     RandomBlock.index += 1;
 
-    if (blockIndex === 0 && RandomBlock.index !== 0) {
+    if (nextIndex === 0) {
       this.shuffle();
     }
 
-    return new RandomBlock.shuffledBlocks[blockIndex]();
+    return {
+      current,
+      next: new RandomBlock.shuffledBlocks[nextIndex](),
+    };
   }
 }
