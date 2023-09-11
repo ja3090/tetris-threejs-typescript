@@ -1,3 +1,4 @@
+import { Utils } from "../../utils/Utils";
 import Board from "../board";
 import Block from "./block";
 
@@ -12,7 +13,7 @@ export default class Rotator {
     const block = this.block.get;
     const groupPosX = block.block[0].position.x;
     const groupPosY = block.block[0].position.y;
-    const newRotIndex = this.mod(
+    const newRotIndex = Utils.trueMod(
       this.block.rotationIndex + (clockwise ? 1 : -1),
       this.block.rotationIndexes
     );
@@ -46,9 +47,5 @@ export default class Rotator {
       tile.position.set(newBlockCoords[ind][0], newBlockCoords[ind][1], 0);
     });
     this.block.rotationIndex = newRotIndex;
-  }
-
-  private mod(x: number, m: number) {
-    return ((x % m) + m) % m;
   }
 }

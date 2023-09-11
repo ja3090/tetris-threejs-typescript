@@ -1,7 +1,7 @@
 import * as allBlocks from ".";
-import { ObjectHelpers } from "../../utils/objToArr";
+import { Shuffle } from "../shuffle";
 
-export class RandomBlock {
+export class RandomBlock extends Shuffle {
   private static instance: RandomBlock;
   public static allBlocks: typeof allBlocks;
   public static shuffledBlocks: (typeof allBlocks)[keyof typeof allBlocks][] =
@@ -13,33 +13,11 @@ export class RandomBlock {
       throw new Error("Only one instance of RandomBlock allowed.");
     }
 
+    super();
+
     RandomBlock.instance = this;
     RandomBlock.allBlocks = allBlocks;
-    this.shuffle();
-  }
-
-  private randomNumber(max: number, min = 0) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
-
-  private shuffle() {
-    const keys = ObjectHelpers.objKeys(RandomBlock.allBlocks);
-
-    if (!keys.length) {
-      RandomBlock.allBlocks = allBlocks;
-      return;
-    }
-
-    const randomNum = this.randomNumber(keys.length);
-    const randomKey = keys[randomNum];
-
-    RandomBlock.shuffledBlocks.push(allBlocks[randomKey]);
-
-    const { [randomKey]: _, ...rest } = RandomBlock.allBlocks;
-
-    RandomBlock.allBlocks = rest as typeof allBlocks;
-
-    this.shuffle();
+    RandomBlock.shuffledBlocks = this.shuffle(allBlocks);
   }
 
   public randomBlock() {
@@ -51,7 +29,7 @@ export class RandomBlock {
     RandomBlock.index += 1;
 
     if (nextIndex === 0) {
-      this.shuffle();
+      RandomBlock.shuffledBlocks = this.shuffle(allBlocks);
     }
 
     return {

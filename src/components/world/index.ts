@@ -1,15 +1,17 @@
-import { Grid } from "./Grid";
-import Block from "./blocks/block";
-import Board from "./board";
-import { Camera } from "./camera";
-import Listeners from "./listeners";
-import { Renderer } from "./renderer";
-import { Scene } from "./scene";
-import { RandomBlock } from "./blocks/randomBlock";
-import { Interval } from "./interval";
-import Loop from "./loop";
-import { AudioProcessor } from "./audio/processor";
-import { Speakers } from "./audio";
+import { Grid } from "../Grid";
+import Block from "../blocks/block";
+import Board from "../board";
+import { Camera } from "../camera";
+import Listeners from "../listeners";
+import { Renderer } from "../renderer";
+import { Scene } from "../scene";
+import { RandomBlock } from "../blocks/randomBlock";
+import { Interval } from "../interval";
+import Loop from "../loop";
+import { AudioProcessor } from "../audio/processor";
+import { Speakers } from "../audio";
+import { RainingBlocks } from "../rainingBlocks";
+import { WorldUniforms } from "./worldUniforms";
 
 export default class World {
   public camera;
@@ -23,32 +25,8 @@ export default class World {
   public loop;
   public audio;
   public speakers;
-  static uniforms = {
-    u_time: {
-      type: "f",
-      value: 2.0,
-    },
-    u_amplitude: {
-      type: "f",
-      value: 4.0,
-    },
-    u_data_arr: {
-      type: "float[64]",
-      value: new Uint8Array(),
-    },
-    u_delta: {
-      type: "float",
-      value: 0,
-    },
-    u_resolution_height: {
-      type: "float",
-      value: 0,
-    },
-    u_resolution_width: {
-      type: "float",
-      value: 0,
-    },
-  };
+  public rainingBlocks;
+  public uniforms;
 
   constructor() {
     this.camera = new Camera(
@@ -69,6 +47,9 @@ export default class World {
     this.loop = new Loop(this.camera, this.scene, this.renderer);
     this.audio = new AudioProcessor(this);
     this.speakers = new Speakers();
+    this.rainingBlocks = new RainingBlocks(this);
+    this.uniforms = new WorldUniforms();
+    this.loop.updatables.push(this.uniforms);
 
     this.scene.add(
       this.camera,
@@ -76,6 +57,7 @@ export default class World {
       this.speakers.group,
       ...this.activePiece.block
     );
+    this.loop.start();
   }
 
   public animate() {
@@ -105,6 +87,6 @@ export default class World {
   }
 
   set uniformUData(data: Uint8Array) {
-    World.uniforms.u_data_arr.value = data;
+    WorldUniforms.values.u_data_arr.value = data;
   }
 }

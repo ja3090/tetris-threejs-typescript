@@ -1,4 +1,3 @@
-import { ObjectHelpers } from "../utils/objToArr";
 import Square from "./square";
 import World from "./world";
 
@@ -95,8 +94,6 @@ export default class Board {
         }
       }
     }
-
-    debugger;
 
     Board.boardMap = newBoard;
   }

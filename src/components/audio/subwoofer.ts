@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Shader } from "./audioShaders";
 import World from "../world";
 import { AudioProcessor as Audio } from "./processor";
+import { WorldUniforms } from "../world/worldUniforms";
 
 export class Subwoofer {
   mesh: THREE.Mesh;
@@ -29,7 +30,7 @@ export class Subwoofer {
       vertexShader: this.shader.vertex,
       fragmentShader: this.shader.fragment,
       uniforms: {
-        ...World.uniforms,
+        ...WorldUniforms.values,
         ...Audio.uniforms,
         u_plane_height: {
           type: "int",

@@ -27,8 +27,6 @@ export default class Listeners {
       if (this.operating) return;
       this.setIsOperating = true;
       if (e.key === " ") {
-        console.log(this.world.audio.analyser);
-
         if (!this.world.audio.analyser) this.world.audio.createAudioContext();
         this.world.activePiece.rotator.rotatePiece(true);
       }

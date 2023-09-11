@@ -67,6 +67,9 @@ export class Shader {
       uniform int u_plane_height;
       uniform int u_plane_width;
       uniform int u_fft_size;
+      uniform float u_red;
+      uniform float u_green;
+      uniform float u_blue;
   
       
       void main() {
@@ -80,7 +83,7 @@ export class Shader {
         float freq = 100.0 / (u_data_arr[int(percentOfFreq)]);
         float blueIntensity = (u_data_arr[int(percentOfFreq)] / 255.0) / 3.0;
   
-        gl_FragColor = vec4(0.3, 0.45 + blueIntensity, (0.75), freq * 1.015);
+        gl_FragColor = vec4(u_red, u_green, u_blue, freq * 1.015);
       }
   `;
   }

@@ -5,7 +5,7 @@ import { Renderer } from "./renderer";
 
 const clock = new Clock();
 
-type WithTickMethod<T extends {}> = T & { tick: (delta: number) => void };
+type WithTickMethod<T extends {}> = T & { tick?: (delta: number) => void };
 
 export default class Loop {
   camera;
