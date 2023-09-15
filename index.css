@@ -2,12 +2,12 @@ body {
   margin: 0;
 }
 
-@font-face {
+/* @font-face {
   font-family: myFirstFont;
   src: url("press-start-font.ttf");
-}
+} */
 
 html {
-  font-family: myFirstFont;
+  font-family: "Press Start 2P", cursive;
   color: white;
 }
