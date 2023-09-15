@@ -49,26 +49,32 @@ export default class Mover {
       this.block.setPos(moveX, moveY);
     }
 
+    let gameOver;
+
     if (!moveOk && dir === "down") {
-      this.updateBoard();
+      gameOver = this.updateBoard();
       blockFinished = true;
-      if (this.hardDropFrom) {
-        Score.hardDropTally =
-          this.hardDropFrom - this.block.block[0].position.y;
-        this.hardDropFrom = 0;
-      }
     }
 
-    return { block: this.block.get, blockFinished };
+    return { block: this.block.get, blockFinished, gameOver };
   }
 
   private updateBoard() {
+    let gameOver = false;
+
     for (const tile of this.block.block) {
       const { x, y } = tile.position;
+
+      if (y >= 20) {
+        gameOver = true;
+        break;
+      }
 
       const key = Board.keyGen(x, y);
 
       Board.set = { key, tile };
     }
+
+    return gameOver;
   }
 }

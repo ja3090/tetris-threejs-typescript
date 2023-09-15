@@ -100,4 +100,18 @@ export default class Board {
 
     Board.boardMap = newBoard;
   }
+
+  public resetBoard() {
+    for (let y = 0; y < Board.boardHeight; y++) {
+      for (let x = 0; x < Board.boardWidth; x++) {
+        const key = Board.keyGen(x, y);
+
+        if (Board.boardMap[key] !== false) {
+          this.world.scene.remove(Board.boardMap[key] as THREE.Object3D);
+        }
+
+        Board.boardMap[key] = false;
+      }
+    }
+  }
 }

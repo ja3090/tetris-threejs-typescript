@@ -1,4 +1,3 @@
-import World from ".";
 import { Utils } from "../../utils/Utils";
 
 export class WorldUniforms {

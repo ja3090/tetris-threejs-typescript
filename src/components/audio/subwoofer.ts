@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { Shader } from "./audioShaders";
-import World from "../world";
 import { AudioProcessor as Audio } from "./processor";
 import { WorldUniforms } from "../world/worldUniforms";
 

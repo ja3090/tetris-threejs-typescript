@@ -5,9 +5,6 @@ import Mover from "./move";
 import Rotator from "./rotate";
 
 export type BlockNames = "z" | "j" | "l" | "s" | "t" | "i" | "o";
-type CachedBlocks = {
-  [K in BlockNames]: THREE.Object3D[];
-};
 
 export default class Block {
   public blockName: BlockNames;

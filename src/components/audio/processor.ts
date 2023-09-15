@@ -11,6 +11,7 @@ export class AudioProcessor {
       value: AudioProcessor.fftSize,
     },
   };
+  public sound: THREE.Audio | undefined;
 
   constructor(world: World) {
     this.world = world;
@@ -20,23 +21,23 @@ export class AudioProcessor {
     const listener = new THREE.AudioListener();
     this.world.camera.add(listener);
 
-    const sound = new THREE.Audio(listener);
+    this.sound = new THREE.Audio(listener);
 
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load("/endurance.mp3", (buffer) => {
-      sound.setBuffer(buffer);
-      sound.setLoop(true);
-      sound.setVolume(0.5);
-      sound.play();
+      this.sound!.setBuffer(buffer);
+      this.sound!.setLoop(true);
+      this.sound!.setVolume(0.5);
+      this.sound!.play();
     });
 
-    this.analyser = new THREE.AudioAnalyser(sound, AudioProcessor.fftSize);
+    this.analyser = new THREE.AudioAnalyser(this.sound, AudioProcessor.fftSize);
 
     this.world.loop.updatables.push(this);
     this.world.start();
   }
 
-  public tick(delta: number) {
+  public tick() {
     if (!this.analyser) return;
 
     const data = this.analyser.getFrequencyData();

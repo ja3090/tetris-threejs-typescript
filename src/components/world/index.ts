@@ -2,7 +2,6 @@ import { Grid } from "../Grid";
 import Block from "../blocks/block";
 import Board from "../board";
 import { Camera } from "../camera";
-import Listeners from "../listeners";
 import { Renderer } from "../renderer";
 import { Scene } from "../scene";
 import { RandomBlock } from "../blocks/randomBlock";
@@ -16,6 +15,7 @@ import { NextBlock } from "./nextBlock";
 import { LabelRenderer } from "../labelRenderer";
 import { Score } from "../score";
 import { StartScreen } from "../startScreen";
+import { GameOver } from "../gameOver";
 
 export default class World {
   public camera;
@@ -35,10 +35,11 @@ export default class World {
   public uniforms;
   public score;
   public nextBlock;
-  public listeners: Listeners | null = null;
   public static hardDrop = false;
   public static softDrop = false;
   public static time = 800;
+  public gameOver: GameOver | undefined;
+  private operating = false;
 
   constructor() {
     this.camera = new Camera(
@@ -95,7 +96,7 @@ export default class World {
   }
 
   public initWorld() {
-    window.addEventListener("keydown", (e) => {
+    const init = (e: KeyboardEvent) => {
       if (e.key === " ") {
         if (!this.audio.analyser && !this.interval) {
           this.audio.createAudioContext();
@@ -103,16 +104,51 @@ export default class World {
             this.movePieceDown.bind(this),
             World.time
           );
-          this.listeners = new Listeners(this);
+          this.initRotateCtrls();
           this.startScreen.container.remove();
-          window.removeEventListener("keydown", this.initWorld);
+          window.removeEventListener("keydown", init);
         }
       }
-    });
+    };
+
+    window.addEventListener("keydown", init);
+  }
+
+  public reinitGame() {
+    const init = (e: KeyboardEvent) => {
+      if (e.key === " ") {
+        this.interval = new Interval(this.movePieceDown.bind(this), World.time);
+        this.gameOver!.container.remove();
+        this.audio.sound?.play();
+        Score.totalLinesCleared = 0;
+        Score.score = 0;
+        Score.level = 0;
+        const { current, next } = this.randomBlockPicker.randomBlock();
+        this.activePiece = current;
+        this.nextBlock = new NextBlock(this, next);
+        this.activePiece.setPos(4, 20);
+        this.scene.add(this.nextBlock.block, ...this.activePiece.block);
+        window.removeEventListener("keydown", init);
+      }
+    };
+
+    window.addEventListener("keydown", init);
   }
 
   private movePieceDown() {
-    const { blockFinished } = this.activePiece.mover.move("down");
+    const { blockFinished, gameOver } = this.activePiece.mover.move("down");
+
+    if (gameOver) {
+      this.interval!.clearInterval();
+      this.audio.sound?.stop();
+      this.gameOver = new GameOver();
+      World.time = 800;
+      this.board.resetBoard();
+      this.reinitGame();
+      this.scene.remove(...this.activePiece.block);
+      this.scene.remove(this.nextBlock.block);
+      return;
+    }
 
     if (blockFinished) {
       this.interval!.clearInterval();
@@ -143,5 +179,44 @@ export default class World {
       this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     });
+  }
+
+  set setIsOperating(isOperating: boolean) {
+    this.operating = isOperating;
+  }
+
+  public initRotateCtrls() {
+    window.addEventListener("keydown", this.ctrls.bind(this));
+  }
+
+  private ctrls(e: KeyboardEvent) {
+    if (this.operating) return;
+    this.setIsOperating = true;
+    if (e.key === " ") {
+      this.activePiece.rotator.rotatePiece(true);
+    }
+    if (e.key === "z") {
+      this.activePiece.rotator.rotatePiece(false);
+    }
+    if (e.key === "ArrowRight") {
+      this.activePiece.mover.move("right");
+    }
+    if (e.key === "ArrowLeft") {
+      this.activePiece.mover.move("left");
+    }
+    if (e.key === "ArrowDown") {
+      World.softDrop = true;
+      this.activePiece.mover.move("down");
+      World.softDrop = false;
+    }
+    if (e.key === "Control") {
+      World.hardDrop = true;
+      this.interval!.changeTime(0.1);
+    }
+    this.setIsOperating = false;
+  }
+
+  public removeCtrls() {
+    window.removeEventListener("keydown", this.ctrls.bind(window));
   }
 }

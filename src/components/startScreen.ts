@@ -1,29 +1,17 @@
+import { Container } from "./htmlelements/container";
+import { Menu } from "./htmlelements/menu";
+import { Text } from "./htmlelements/text";
+
 export class StartScreen {
   container;
 
   constructor() {
-    const container = document.createElement("div");
-    this.container = container;
+    this.container = new Container().element;
+    document.getElementById("app")?.appendChild(this.container);
 
-    container.style.height = "100vh";
-    container.style.width = "100vw";
-    container.style.position = "absolute";
-    container.style.top = "0";
-    container.style.display = "flex";
-    container.style.justifyContent = "center";
-    container.style.alignItems = "center";
-    document.getElementById("app")?.appendChild(container);
+    const menu = new Menu().element;
 
-    const menu = document.createElement("div");
-
-    menu.style.height = "60vh";
-    menu.style.width = "60vw";
-    menu.style.position = "absolute";
-    menu.style.backgroundColor = "black";
-    menu.style.zIndex = "100";
-    menu.style.textAlign = "center";
-
-    container.appendChild(menu);
+    this.container.appendChild(menu);
 
     const pressSpaceToStart = document.createElement("p");
 
@@ -41,17 +29,17 @@ export class StartScreen {
     const ctrl = this.createKey("ctrl");
 
     grid.appendChild(ctrl);
-    grid.appendChild(this.text("Hard Drop"));
+    grid.appendChild(new Text("Hard Drop").element);
 
     const space = this.createKey("Spacebar");
 
     grid.appendChild(space);
-    grid.appendChild(this.text("Clockwise Rotate"));
+    grid.appendChild(new Text("Clockwise Rotate").element);
 
     const Z = this.createKey("Z");
 
     grid.appendChild(Z);
-    grid.appendChild(this.text("Anti-clockwise Rotate"));
+    grid.appendChild(new Text("Anti-clockwise Rotate").element);
 
     const arrowKeys = document.createElement("div");
 
@@ -66,7 +54,7 @@ export class StartScreen {
     arrowKeys.appendChild(right);
 
     grid.appendChild(arrowKeys);
-    grid.appendChild(this.text("Movement Keys"));
+    grid.appendChild(new Text("Movement Keys").element);
   }
 
   createKey(text: string) {
@@ -84,13 +72,5 @@ export class StartScreen {
     domNode.innerHTML = text;
 
     return domNode;
-  }
-
-  text(text: string) {
-    const el = document.createElement("p");
-
-    el.textContent = text;
-
-    return el;
   }
 }
