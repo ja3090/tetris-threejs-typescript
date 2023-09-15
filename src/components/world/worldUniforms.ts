@@ -4,8 +4,16 @@ import { Utils } from "../../utils/Utils";
 export class WorldUniforms {
   colIndex = 0;
   colours;
-  static readonly initialCols = [0.2, 0.48, 0.58];
-  static readonly upperLimits = [0.4, 0.65, 0.9];
+  static readonly initialCols = [
+    Utils.randomNumber(3, 1) / 10,
+    Utils.randomNumber(6, 4) / 10,
+    Utils.randomNumber(4, 2) / 10,
+  ];
+  static readonly upperLimits = [
+    this.initialCols[0] * 2,
+    this.initialCols[1] * 2,
+    this.initialCols[2] * 2,
+  ];
   public static values = {
     u_time: {
       type: "f",

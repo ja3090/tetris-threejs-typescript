@@ -1,4 +1,6 @@
 import Board from "../board";
+import { Score } from "../score";
+import World from "../world";
 import Block from "./block";
 
 export default class Mover {
@@ -8,6 +10,7 @@ export default class Mover {
     right: [1, 0],
   };
   public block: Block;
+  public hardDropFrom = 0;
 
   constructor(block: Block) {
     this.block = block;
@@ -15,6 +18,9 @@ export default class Mover {
 
   public move(dir: keyof typeof Mover.moves) {
     const { length } = this.block.block;
+
+    if (World.hardDrop) Score.hardDropTally += 1;
+    if (World.softDrop) Score.softDropTally += 1;
 
     const [moveX, moveY] = Mover.moves[dir];
 
@@ -46,6 +52,11 @@ export default class Mover {
     if (!moveOk && dir === "down") {
       this.updateBoard();
       blockFinished = true;
+      if (this.hardDropFrom) {
+        Score.hardDropTally =
+          this.hardDropFrom - this.block.block[0].position.y;
+        this.hardDropFrom = 0;
+      }
     }
 
     return { block: this.block.get, blockFinished };

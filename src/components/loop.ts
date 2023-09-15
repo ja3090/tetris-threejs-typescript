@@ -2,6 +2,7 @@ import { Clock } from "three";
 import { Camera } from "./camera";
 import { Scene } from "./scene";
 import { Renderer } from "./renderer";
+import { LabelRenderer } from "./labelRenderer";
 
 const clock = new Clock();
 
@@ -11,16 +12,19 @@ export default class Loop {
   camera;
   scene;
   renderer;
+  labelRenderer;
   updatables: WithTickMethod<{}>[] = [];
 
   constructor(
     camera: Camera["camera"],
     scene: Scene["scene"],
-    renderer: Renderer["renderer"]
+    renderer: Renderer["renderer"],
+    labelRenderer: LabelRenderer["labelRenderer"]
   ) {
     this.camera = camera;
     this.scene = scene;
     this.renderer = renderer;
+    this.labelRenderer = labelRenderer;
   }
 
   start() {
@@ -28,6 +32,7 @@ export default class Loop {
       this.tick();
 
       this.renderer.render(this.scene, this.camera);
+      this.labelRenderer.render(this.scene, this.camera);
     });
   }
 

@@ -6,16 +6,7 @@ export default class Listeners {
 
   constructor(world: World) {
     this.world = world;
-    this.resize();
     this.initRotateCtrls();
-  }
-
-  public resize() {
-    window.addEventListener("resize", () => {
-      this.world.camera.aspect = window.innerWidth / window.innerHeight;
-      this.world.camera.updateProjectionMatrix();
-      this.world.renderer.setSize(window.innerWidth, window.innerHeight);
-    });
   }
 
   set setIsOperating(isOperating: boolean) {
@@ -27,7 +18,6 @@ export default class Listeners {
       if (this.operating) return;
       this.setIsOperating = true;
       if (e.key === " ") {
-        if (!this.world.audio.analyser) this.world.audio.createAudioContext();
         this.world.activePiece.rotator.rotatePiece(true);
       }
       if (e.key === "z") {
@@ -40,7 +30,13 @@ export default class Listeners {
         this.world.activePiece.mover.move("left");
       }
       if (e.key === "ArrowDown") {
-        this.world.interval.changeTime(0);
+        World.softDrop = true;
+        this.world.activePiece.mover.move("down");
+        World.softDrop = false;
+      }
+      if (e.key === "Control") {
+        World.hardDrop = true;
+        this.world.interval!.changeTime(0.1);
       }
       this.setIsOperating = false;
     });

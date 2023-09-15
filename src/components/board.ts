@@ -1,3 +1,4 @@
+import { Score } from "./score";
 import Square from "./square";
 import World from "./world";
 
@@ -64,6 +65,8 @@ export default class Board {
       }
 
       if (fullTally === Board.boardWidth) {
+        Score.linesCleared += 1;
+        Score.totalLinesCleared += 1;
         continue;
       } else {
         arr.push(partiallyFilledRows);

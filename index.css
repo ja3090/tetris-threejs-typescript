@@ -1,3 +1,13 @@
 body {
   margin: 0;
 }
+
+@font-face {
+  font-family: myFirstFont;
+  src: url(press-start-font.ttf);
+}
+
+html {
+  font-family: myFirstFont;
+  color: white;
+}

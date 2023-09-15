@@ -17,13 +17,20 @@ export class RainingBlocks extends Shuffle {
   startingHeight = 175;
   distanceAway = -150;
   shader;
+  uniforms = {
+    ...WorldUniforms.values,
+    u_block_size: {
+      type: "float",
+      value: this.blockSize,
+    },
+  };
 
   constructor(world: World) {
     super();
     this.world = world;
     const { prototype, ...rest } = Blocks;
     const shuffled = this.shuffle(rest);
-    this.shuffledBlocks = shuffled.concat(shuffled);
+    this.shuffledBlocks = [...shuffled, ...shuffled, ...shuffled, ...shuffled];
     this.shader = new Shader();
     this.buildBlocks();
   }
@@ -34,6 +41,25 @@ export class RainingBlocks extends Shuffle {
 
       const randomTime = Utils.randomNumber(50, 6);
       const randomRotationRate = Utils.randomNumber(8, -8);
+      const uniforms = {
+        u_data_arr: WorldUniforms.values.u_data_arr,
+        u_block_size: {
+          type: "float",
+          value: this.blockSize,
+        },
+        u_red: {
+          type: "float",
+          value: Utils.randomNumber(6, 2) / 10,
+        },
+        u_green: {
+          type: "float",
+          value: Utils.randomNumber(8, 2) / 10,
+        },
+        u_blue: {
+          type: "float",
+          value: Utils.randomNumber(8, 2) / 10,
+        },
+      };
 
       for (const [x, y] of block[0]) {
         const geo = new THREE.BoxGeometry(
@@ -41,18 +67,13 @@ export class RainingBlocks extends Shuffle {
           this.blockSize,
           this.blockSize
         );
+
         const mat = new THREE.ShaderMaterial({
           wireframe: true,
           fragmentShader: this.shader.fragment,
           vertexShader: this.shader.vertex,
-          uniforms: {
-            ...WorldUniforms.values,
-            u_block_size: {
-              type: "float",
-              value: this.blockSize,
-            },
-          },
-          // color: "white",
+          uniforms,
+          transparent: true,
         });
 
         const mesh = new THREE.Mesh(geo, mat);
@@ -67,12 +88,12 @@ export class RainingBlocks extends Shuffle {
       }
 
       const startingHeight = Utils.randomNumber(
-        this.startingHeight * 2,
-        this.startingHeight
+        this.startingHeight * 2.5,
+        this.startingHeight * 1.5
       );
 
       blockGroup.position.set(
-        Utils.randomNumber(-300, 300),
+        Utils.randomNumber(-275, 275),
         startingHeight,
         Utils.randomNumber(this.distanceAway * 3, this.distanceAway)
       );

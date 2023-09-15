@@ -6,6 +6,7 @@ export class Renderer {
   constructor() {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
+    const app = document.getElementById("app");
+    app!.appendChild(this.renderer.domElement);
   }
 }

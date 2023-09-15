@@ -23,6 +23,7 @@ export class Shader {
           uniform int u_fft_size;
           uniform float u_rotation;
           float PI = 3.1415926535897932384626433832795;
+          varying vec4 pos;
   
         vec3 rotateAxis(vec3 p, vec3 axis, float angle) {
           return mix(dot(axis, p)*axis, p, cos(angle)) + cross(axis,p)*sin(angle);
@@ -46,6 +47,7 @@ export class Shader {
           x = vUv.x - freq;
           z = vUv.z - freq;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(x, position.y, z, 1.0);
+          pos = gl_Position;
           }
       `;
   }
@@ -53,6 +55,7 @@ export class Shader {
   createFragment() {
     return /*glsl*/ `
       // varying float radius;
+      varying vec4 pos;
       varying float x;
       varying float y;
       varying float z;
@@ -81,9 +84,10 @@ export class Shader {
         float radiusAsPercent = abs(radius) / floatWH.y;
         float percentOfFreq = round(lowerFreq * radiusAsPercent);
         float freq = 100.0 / (u_data_arr[int(percentOfFreq)]);
-        float blueIntensity = (u_data_arr[int(percentOfFreq)] / 255.0) / 3.0;
+        float blueIntensity = u_data_arr[int(percentOfFreq)] / 255.0;
+        vec3 colours = vec3(cos(u_red + radiusAsPercent), cos(u_green + radiusAsPercent), cos(u_blue + radiusAsPercent));
   
-        gl_FragColor = vec4(u_red, u_green, u_blue, freq * 1.015);
+        gl_FragColor = vec4(colours, freq*1.1);
       }
   `;
   }

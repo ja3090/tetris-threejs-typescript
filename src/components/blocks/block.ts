@@ -31,8 +31,8 @@ export default class Block {
     const squares = this.rotationStates[rotIndex].map(([x, y]) => {
       const { square } = new Square();
 
-      const finalX = addX ? x + addX : x;
-      const finalY = addY ? y + addY : y;
+      const finalX = addX ? x * addX : x;
+      const finalY = addY ? y * addY : y;
 
       square.position.set(finalX, finalY, 0);
 
