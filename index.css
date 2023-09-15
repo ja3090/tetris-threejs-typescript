@@ -4,7 +4,7 @@ body {
 
 @font-face {
   font-family: myFirstFont;
-  src: url(press-start-font.ttf);
+  src: url("press-start-font.ttf");
 }
 
 html {
