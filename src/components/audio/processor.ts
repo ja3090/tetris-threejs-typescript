@@ -4,7 +4,7 @@ import World from "../world";
 export class AudioProcessor {
   world: World;
   analyser: THREE.AudioAnalyser | undefined;
-  public static fftSize = 1024;
+  public static fftSize = 512;
   public static uniforms = {
     u_fft_size: {
       type: "int",
