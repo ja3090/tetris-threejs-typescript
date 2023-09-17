@@ -19,6 +19,8 @@ export class GameOver {
 
     this.menu.appendChild(gameOver);
 
-    this.menu.appendChild(new Text(String(Score.score)).element);
+    this.menu.appendChild(new Text("Score: " + String(Score.score)).element);
+
+    this.menu.appendChild(new Text("Press spacebar to play again!").element);
   }
 }

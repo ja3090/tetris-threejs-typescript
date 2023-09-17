@@ -123,6 +123,8 @@ export default class World {
         Score.totalLinesCleared = 0;
         Score.score = 0;
         Score.level = 0;
+        this.score.levelHTMLElement.innerText = "0";
+        this.score.scoreHTMLElement.innerText = "0";
         const { current, next } = this.randomBlockPicker.randomBlock();
         this.activePiece = current;
         this.nextBlock = new NextBlock(this, next);
